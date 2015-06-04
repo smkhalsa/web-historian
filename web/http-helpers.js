@@ -37,7 +37,7 @@ exports.serveAssets = function(res, asset) {
 
 exports.serveRedirect = function(location, res, code) {
   var statusCode = code || 302;
-  res.writeHead(statusCode, {'Location': location});
+  res.writeHead(statusCode, {'Location': '/' + location});
   res.end();
 };
 

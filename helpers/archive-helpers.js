@@ -53,7 +53,12 @@ exports.addUrlToList = function(site, callback){
   fs.appendFile(exports.paths.list, site + '\n', callback);
 };
 
-exports.isURLArchived = function(){
+exports.isURLArchived = function(path, callback){
+  fs.readFile(exports.paths.archivedSites + '/' + path, {encoding: 'utf8'}, function(err, data){
+    callback(!err);
+  });
+
+
 };
 
 exports.downloadUrls = function(){
