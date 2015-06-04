@@ -4,6 +4,18 @@ var staticServe = require('node-static');
 var fs = require('fs');
 // require more modules/folders here!
 // archive.siteAssets
+var statusCode = 200;
+
+var servePage = function(path, res) {
+  fs.readFile(path, {encoding: 'utf8'}, function(error, data){
+    if (error) {
+      console.log('error: ' + error);
+    }
+    res.writeHead(statusCode, {'Content-Type': 'text/html'});
+    res.end(data);
+  });
+};
+
 
 
 exports.handleRequest = function (req, res, path) {
@@ -13,23 +25,6 @@ exports.handleRequest = function (req, res, path) {
     path = '/index.html';
   }
 
-  var serveGet = function() {
-    var statusCode = 200;
-    var filePath = archive.paths.siteAssets+ path;
-    fs.readFile(filePath, {encoding: 'utf8'}, function(error, data){
-      if (error) {
-        console.log('error: ' + error)
-      }
-      res.writeHead(statusCode, {'Content-Type': 'text/html'});
-      res.end(data);
-    });
-  };
-    // var server = new staticServe.Server(archive.paths['siteAssets']);
-
-    // req.addListener('end', function () {
-    //     server.serve(req, res);
-    //   }).resume();
-
   var servePost = function() {
     var string = '';
     req.on('data', function(data) {
@@ -37,17 +32,27 @@ exports.handleRequest = function (req, res, path) {
     });
     req.on('end', function() {
       var site = string.substring(4);
-      archive.addUrlToList(site, function(){
-        console.log('appended');
+      archive.isUrlInList(site, function(exists) {
+        if(exists) {
+          //serve cached website copy
+        } else {
+          archive.addUrlToList(site, function() {
+            console.log('site has been appended to sites.txt');
+          });
+        };
+        res.writeHead(302, {'Location': '/loading.html'});
+        console.log('response within callback');
+        console.log(res);
+        res.end();
       });
+      console.log('response outside of callback');
+      console.log(res);
     });
-
-
   };
 
 
   var actions = {
-    'GET': serveGet,
+    'GET': servePage(archive.paths.siteAssets + path, res),
     'POST': servePost
   };
 

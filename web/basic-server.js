@@ -16,11 +16,11 @@ var ip = "127.0.0.1";
 var server = http.createServer(function(req, res) {
   var path = url.parse(req.url).pathname;
 
-  if (path.substr(0, 3) === 'www') {
-    handler.serveSites(req, res, path);
-  } else {
-    handler.handleRequest(req, res, path);
-  }
+  handler.handleRequest(req, res, path);
+  // if (path.substr(0, 4) === '/www') {
+  //   handler.serveSites(req, res, path);
+  // } else {
+  // }
 });
 
 

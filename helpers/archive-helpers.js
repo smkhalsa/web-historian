@@ -49,16 +49,11 @@ exports.isUrlInList = function(site, callback){
 
 };
 
+
 exports.addUrlToList = function(site, callback){
   // append the posted string to the list
   // write the list to sites.text
-  exports.isUrlInList(site, function(exists){
-    if(!exists) {
-      fs.appendFile(exports.paths.list,site, function(){
-        callback();
-      });
-    }
-  })
+  fs.appendFile(exports.paths.list, site + '\n', callback);
 };
 
 exports.isURLArchived = function(){
