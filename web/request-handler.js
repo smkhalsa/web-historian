@@ -36,12 +36,12 @@ exports.handleRequest = function (req, res, path) {
       string += data;
     });
     req.on('end', function() {
+      var site = string.substring(4);
+      archive.addUrlToList(site, function(){
+        console.log('appended');
+      });
     });
-    // pull off url=
-    var site = string.substring(4);
-    archive.readListOfUrls(function(data) {
-      console.log(data);
-    });
+
 
   };
 
