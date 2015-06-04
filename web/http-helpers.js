@@ -23,7 +23,7 @@ exports.serveAssets = function(res, asset) {
     if (err) {
       fs.readFile(archive.paths.archivedSites + asset, {encoding: 'utf8'}, function(err, data) {
         if(err) {
-          console.log('404 - file not found ' + err);
+          exports.send404(res);
         } else {
           exports.sendResponse(res, data);
         }
@@ -52,4 +52,7 @@ exports.collectData = function(req, callback) {
   });
 };
 
-// As you progress, keep thinking about what helper functions you can put here!
+exports.send404 = function(res) {
+  res.writeHead(404);
+  res.end("404 - file not found");
+};
