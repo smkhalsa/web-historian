@@ -20,9 +20,7 @@ exports.handleRequest = function (req, res, path) {
       if (error) {
         console.log('error: ' + error)
       }
-
       res.writeHead(statusCode, {'Content-Type': 'text/html'});
-      console.log(data);
       res.end(data);
     });
   };
@@ -32,8 +30,25 @@ exports.handleRequest = function (req, res, path) {
     //     server.serve(req, res);
     //   }).resume();
 
+  var servePost = function() {
+    var string = '';
+    req.on('data', function(data) {
+      string += data;
+    });
+    req.on('end', function() {
+    });
+    // pull off url=
+    var site = string.substring(4);
+    archive.readListOfUrls(function(data) {
+      console.log(data);
+    });
+
+  };
+
+
   var actions = {
-    'GET': serveGet
+    'GET': serveGet,
+    'POST': servePost
   };
 
   if(actions[action]) {
