@@ -42,10 +42,7 @@ exports.isUrlInList = function(site, callback){
   exports.readListOfUrls(function(data){
     callback(data.indexOf(site) > -1);
   });
-  // return exports.readListOfUrls(function(data) {
-  //   return data.indexOf(site > -1);
 
-  // });
 
 };
 

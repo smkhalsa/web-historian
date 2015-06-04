@@ -41,4 +41,15 @@ exports.serveRedirect = function(location, res, code) {
   res.end();
 };
 
+
+exports.collectData = function(req, callback) {
+  var string = '';
+  req.on('data', function(data) {
+    string+=data;
+  });
+  req.on('end', function() {
+    callback(string.substring(4));
+  });
+};
+
 // As you progress, keep thinking about what helper functions you can put here!
