@@ -6,21 +6,12 @@ var url = require('url');
 // HINT:It has to do with what's in .gitignore
 initialize();
 
-// var routes = {
-//   '/': handler.handleRequest,
-//   '/styles.css': handler.handleRequest
-// };
-
 var port = 8080;
 var ip = "127.0.0.1";
 var server = http.createServer(function(req, res) {
   var path = url.parse(req.url).pathname;
 
   handler.handleRequest(req, res, path);
-  // if (path.substr(0, 4) === '/www') {
-  //   handler.serveSites(req, res, path);
-  // } else {
-  // }
 });
 
 

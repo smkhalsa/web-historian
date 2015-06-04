@@ -2,19 +2,22 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var staticServe = require('node-static');
 var fs = require('fs');
+var util = require('./http-helpers.js');
 // require more modules/folders here!
 // archive.siteAssets
-var statusCode = 200;
+// var statusCode = 200;
 
-var servePage = function(path, res) {
-  fs.readFile(path, {encoding: 'utf8'}, function(error, data){
-    if (error) {
-      console.log('error: ' + error);
-    }
-    res.writeHead(statusCode, {'Content-Type': 'text/html'});
-    res.end(data);
-  });
-};
+// var servePage = function(path, res) {
+//   fs.readFile(path, {encoding: 'utf8'}, function(error, data){
+//     if (error) {
+//       console.log('error: ' + error);
+//     }
+//     res.writeHead(statusCode, {'Content-Type': 'text/html'});
+//     res.end(data);
+//   });
+// };
+
+
 
 
 
@@ -34,16 +37,18 @@ exports.handleRequest = function (req, res, path) {
       var site = string.substring(4);
       archive.isUrlInList(site, function(exists) {
         if(exists) {
+          util.serveRedirect("/" + site, res, 302);
           //serve cached website copy
         } else {
           archive.addUrlToList(site, function() {
             console.log('site has been appended to sites.txt');
+            util.serveRedirect('/loading.html', res, 302);
           });
         };
-        res.writeHead(302, {'Location': '/loading.html'});
-        console.log('response within callback');
-        console.log(res);
-        res.end();
+        // res.writeHead(302, {'Location': '/loading.html'});
+        // console.log('response within callback');
+        // console.log(res);
+        // res.end();
       });
       console.log('response outside of callback');
       console.log(res);
@@ -52,8 +57,12 @@ exports.handleRequest = function (req, res, path) {
 
 
   var actions = {
-    'GET': servePage(archive.paths.siteAssets + path, res),
-    'POST': servePost
+    'GET': function(){
+      util.serveAssets(res, path);
+    },
+    'POST': function(){
+
+    }
   };
 
   if(actions[action]) {
@@ -63,9 +72,4 @@ exports.handleRequest = function (req, res, path) {
 
 };
 
-
-exports.serveSites = function(req, res) {
-  //add to paths list if not there
-    //takes user to loading page OR responds with archived site
-
-};
+;

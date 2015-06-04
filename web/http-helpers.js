@@ -10,11 +10,35 @@ exports.headers = headers = {
   'Content-Type': "text/html"
 };
 
-exports.serveAssets = function(res, asset, callback) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
+exports.sendResponse = function(res, data, status) {
+  var statusCode = status || 200;
+  res.writeHead(statusCode, {'Content-Type': 'text/html'});
+  res.end(data);
 };
 
+exports.serveAssets = function(res, asset) {
+  // Write some code here that helps serve up your static files!
+  // (Static files are things like html (yours or archived from others...), css, or anything that doesn't change often.)
+  fs.readFile(archive.paths.siteAssets + asset, {encoding: 'utf8'}, function(err, data){
+    if (err) {
+      fs.readFile(archive.paths.archivedSites + asset, {encoding: 'utf8'}, function(err, data) {
+        if(err) {
+          console.log('404 - file not found ' + err);
+        } else {
+          exports.sendResponse(res, data);
+        }
+      });
+    } else {
+      exports.sendResponse(res, data);
+    }
 
+  });
+};
+
+exports.serveRedirect = function(location, res, code) {
+  var statusCode = code || 302;
+  res.writeHead(statusCode, {'Location': location});
+  res.end();
+};
 
 // As you progress, keep thinking about what helper functions you can put here!
