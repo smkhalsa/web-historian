@@ -56,13 +56,17 @@ exports.addUrlToList = function(site, callback){
 
 exports.isURLArchived = function(path, callback){
   fs.readFile(exports.paths.archivedSites + '/' + path, {encoding: 'utf8'}, function(err, data){
-    callback(!err);
+    callback(!err, path);
   });
 };
 
 exports.getSite = function(site, callback){
   httpRequest.get('http://' + site, function(err, response){
-    callback(response.buffer.toString());
+    if(err) {
+      console.log('error: ' + err);
+    } else {
+      callback(response.buffer.toString());
+    }
   });
 };
 
